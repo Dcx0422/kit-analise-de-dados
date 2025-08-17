@@ -1,44 +1,41 @@
-# Caixa de Ferramentas do Analista de Dados
+# Kit de Ferramentas do Analista de Dados
 
-Este repositório contém um módulo Python (`ferramentas_analista.py`) projetado para resolver duas dores comuns no fluxo de trabalho de analistas de dados que usam Python e Jupyter Notebooks.
+Este repositório contém um módulo Python (`ferramentas_analista.py`) projetado para resolver duas dores comuns no fluxo de trabalho de analistas de dados que usam Python e Jupyter Notebooks, agilizando tarefas repetitivas.
 
 A inspiração veio da facilidade de ferramentas como o Power Query, que inspecionam e carregam dados de forma inteligente, e da necessidade de transformar análises exploratórias em scripts reutilizáveis.
 
 ## 🚀 Funcionalidades Principais
 
-1.  **Carregador Inteligente de CSV (`carregar_csv_inteligente`)**
-    -   Chega de tentativa e erro com `pd.read_csv`!
-    -   Detecta automaticamente o **delimitador** (`,` , `;` , `\t` e outros).
-    -   Detecta automaticamente a **codificação de caracteres** (UTF-8, Latin-1, etc.), evitando problemas com acentuação.
-    -   Exibe um resumo claro do que foi detectado antes de carregar os dados.
+1.  **Carregador de Dados Universal (`carregar_dados`)**
+    -   Lida nativamente com os formatos mais comuns: **CSV, TXT, Excel, JSON e Parquet**.
+    -   Para arquivos CSV/Texto, detecta automaticamente o delimitador e a codificação de caracteres.
+    -   **Possui um modo de recuperação automático para arquivos CSV malformados:** ele carrega as linhas válidas e salva as problemáticas em um arquivo `_erros.csv` separado para inspeção, sem quebrar a execução.
 
 2.  **Conversor de Notebook para Script (`converter_notebook_para_py`)**
     -   Transforma seu trabalho de exploração (`.ipynb`) em um script de produção (`.py`) com um único comando.
-    -   Mantém as células de código como código Python.
     -   Converte suas explicações em células de **Markdown para comentários**, preservando a documentação.
-    -   Comenta automaticamente comandos "mágicos" (`%matplotlib inline`) que só funcionam em notebooks.
+    -   Identifica, neutraliza e reporta comandos específicos do Jupyter (`%matplotlib`, `!pip`, `display()`, etc.) para garantir que o script final seja 100% executável.
 
 ## 🛠️ Como Usar
 
 ### 1. Pré-requisitos
 
-Certifique-se de ter as bibliotecas necessárias instaladas:
+Certifique-se de ter as bibliotecas necessárias instaladas para dar suporte a todos os formatos:
 
 ```bash
-pip install pandas chardet nbformat matplotlib seaborn jupyter
+pip install pandas chardet nbformat matplotlib seaborn jupyter openpyxl pyarrowr
 ```
 
 ### 2. Estrutura
 
-Para testar o projeto, clone este repositório ou baixe os arquivos e coloque-os na mesma pasta:
+Para testar o projeto, use o notebook de demonstração `Analise_Exploratoria_Completa.ipynb` ou comece um novo projeto com o `notebook_modelo.ipynb`.
 
 ```
 kit-do-analista/
 ├── ferramentas_analista.py
 ├── Analise_Exploratoria_Completa.ipynb
-├── relatorio_vendas_BR.csv
-├── dados_feedback_US.csv
-├── log_acessos.tsv
+├── notebook_modelo.ipynb
+├── ...seus arquivos de dados...
 └── README.md
 ```
 
