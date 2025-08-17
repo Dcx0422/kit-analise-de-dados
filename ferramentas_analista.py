@@ -1,7 +1,6 @@
 """
 Kit de Ferramentas do Analista de Dados
 ---------------------------------------
-
 Este módulo fornece um conjunto de funções para agilizar o fluxo de
 trabalho de análise de dados, desde a importação inteligente de dados
 de múltiplos formatos até a conversão de notebooks para scripts.
@@ -14,23 +13,18 @@ import io
 import nbformat
 import sys
 import os
+import json
 
 # ==============================================================================
-# FUNÇÃO 1: CARREGADOR DE DADOS UNIVERSAL (COM MODO DE RECUPERAÇÃO AUTOMÁTICO)
+# FUNÇÃO 1: CARREGADOR DE DADOS UNIVERSAL
 # ==============================================================================
 
 def _carregar_csv_inteligente(caminho_arquivo: str):
-    """
-    Função interna para a lógica de detecção e carga de CSV.
-    Agora com um modo de recuperação automático para arquivos malformados.
-    """
+    """Função interna para a lógica de detecção e carga de CSV com modo de recuperação."""
     print("-> Formato CSV/Texto detectado. Iniciando análise de estrutura...")
-    
-    # --- Passo 1: Detectar estrutura (codificação e delimitador) ---
     try:
         with open(caminho_arquivo, 'rb') as f:
             raw_data = f.read(20000)
-        
         resultado_chardet = chardet.detect(raw_data)
         codificacao = resultado_chardet['encoding'] or 'utf-8'
         print(f"   - Codificação provável: '{codificacao}' (Confiança: {resultado_chardet['confidence']:.2%})")
@@ -42,77 +36,61 @@ def _carregar_csv_inteligente(caminho_arquivo: str):
             delimitador = dialect.delimiter
             print(f"   - Delimitador provável: '{delimitador}'")
         except csv.Error:
-            print("   - Não foi possível detectar o delimitador. Usando ',' (vírgula).")
-
+            print("   - Não foi possível detectar o delimitador. Usando ',' como padrão.")
     except Exception as e:
         print(f"❌ ERRO na fase de detecção: {e}")
         return None
 
-    # --- Passo 2: Tentativa de Carga Rápida ---
     try:
         print("-> Tentando carregar o arquivo no modo rápido...")
         df = pd.read_csv(caminho_arquivo, sep=delimitador, encoding=codificacao, engine='python', on_bad_lines='error')
         return df
-    
-    # --- Passo 3: Modo de Recuperação Automático ---
     except pd.errors.ParserError as e:
         print(f"   - ⚠️  AVISO: O modo rápido falhou. O arquivo contém linhas malformadas.")
         print(f"      Detalhe do erro: {e}")
         print("-> Ativando modo de segurança: separando linhas boas e ruins...")
-
         try:
-            linhas_boas = []
-            linhas_ruins = []
-            
+            linhas_boas, linhas_ruins = [], []
             with open(caminho_arquivo, 'r', encoding=codificacao, errors='ignore') as f:
                 leitor_csv = csv.reader(f, delimiter=delimitador)
-                
-                # Lê o cabeçalho para determinar o número esperado de colunas
                 cabecalho = next(leitor_csv)
                 num_colunas_esperado = len(cabecalho)
                 linhas_boas.append(cabecalho)
-                
-                # Itera sobre o restante do arquivo
-                for i, linha in enumerate(leitor_csv, start=2): # start=2 para contar a linha do cabeçalho
+                for i, linha in enumerate(leitor_csv, start=2):
                     if len(linha) == num_colunas_esperado:
                         linhas_boas.append(linha)
                     else:
-                        # Adiciona a linha original (texto) e o número da linha ao log de erros
                         linhas_ruins.append([i, f"Esperava {num_colunas_esperado} colunas, encontrou {len(linha)}", str(linha)])
-
-            # Salva as linhas problemáticas em um arquivo de log/erros
+            
             if linhas_ruins:
                 caminho_erros = f"{os.path.splitext(caminho_arquivo)[0]}_erros.csv"
                 print(f"   - Encontradas {len(linhas_ruins)} linhas problemáticas. Salvando em '{os.path.basename(caminho_erros)}'")
-                
                 with open(caminho_erros, 'w', newline='', encoding='utf-8') as f_erros:
                     escritor = csv.writer(f_erros)
                     escritor.writerow(['Numero_Linha_Original', 'Problema', 'Conteudo_Linha'])
                     escritor.writerows(linhas_ruins)
 
-            # Cria o DataFrame final a partir das linhas boas
-            if len(linhas_boas) > 1: # Se encontrou mais do que apenas o cabeçalho
-                df = pd.DataFrame(linhas_boas[1:], columns=linhas_boas[0])
-                # Tenta converter os tipos de dados automaticamente, como o read_csv faz
-                df = df.infer_objects() 
+            if len(linhas_boas) > 1:
+                df = pd.DataFrame(linhas_boas[1:], columns=linhas_boas[0]).infer_objects()
                 return df
             else:
                 print("❌ ERRO: Nenhuma linha de dados válida foi encontrada após a limpeza.")
                 return None
-
         except Exception as e_safe:
             print(f"❌ ERRO: O modo de segurança também falhou: {e_safe}")
             return None
-
+    except Exception as e_geral:
+        print(f"❌ ERRO inesperado ao processar o arquivo CSV: {e_geral}")
+        return None
 
 def carregar_dados(caminho_arquivo: str, **kwargs):
     """
     Carrega dados de diferentes tipos de arquivos (CSV, Excel, JSON, Parquet).
-    Para CSVs, usa um modo de recuperação automático para lidar com linhas malformadas.
+    Para CSVs, usa um modo de recuperação automático.
+    Para JSONs, tenta normalizar estruturas aninhadas comuns (como respostas de API).
     """
     print(f"--- 🕵️‍♂️ Analisando e Carregando: {os.path.basename(caminho_arquivo)} ---")
     
-    # ... (o resto da função permanece o mesmo, chamando a nova lógica para CSV)
     if not os.path.exists(caminho_arquivo):
         print(f"❌ ERRO: Arquivo não encontrado em '{caminho_arquivo}'")
         return None
@@ -130,8 +108,27 @@ def carregar_dados(caminho_arquivo: str, **kwargs):
             df = pd.read_excel(caminho_arquivo, **kwargs)
         
         elif extensao == '.json':
-            print("-> Formato JSON detectado. Usando 'pd.read_json'.")
-            df = pd.read_json(caminho_arquivo, **kwargs)
+            print("-> Formato JSON detectado. Tentando normalizar estrutura...")
+            try:
+                with open(caminho_arquivo, 'r', encoding='utf-8') as f:
+                    dados_json = json.load(f)
+                
+                chave_dos_dados = None
+                for chave, valor in dados_json.items():
+                    if isinstance(valor, list):
+                        chave_dos_dados = chave
+                        break
+                
+                if chave_dos_dados:
+                    print(f"   - Lista de dados encontrada na chave: '{chave_dos_dados}'. Usando 'pd.json_normalize'.")
+                    df = pd.json_normalize(dados_json, record_path=[chave_dos_dados], **kwargs)
+                else:
+                    print("   - Estrutura aninhada não detectada. Usando 'pd.read_json' padrão.")
+                    df = pd.read_json(caminho_arquivo, **kwargs)
+
+            except Exception as e_json:
+                 print(f"❌ ERRO ao processar o arquivo JSON: {e_json}")
+                 return None
             
         elif extensao == '.parquet':
             print("-> Formato Parquet detectado. Usando 'pd.read_parquet'.")
@@ -145,7 +142,6 @@ def carregar_dados(caminho_arquivo: str, **kwargs):
             print(f"--- ✅ DataFrame carregado com {len(df)} linhas! ---")
         
         return df
-
     except Exception as e:
         print(f"❌ ERRO inesperado ao carregar o arquivo: {e}")
         return None
